@@ -9,24 +9,25 @@
 		made by each of these three groups in 2016.
 
     SOURCES ::
-        * ...
-
-    DIMENSIONS ::
-        * ...
-
-    FACTS ::
-        * ...
+        * fielding
 
     FILTERS ::
-        * ...
+        * year = 2016
 
-    DESCRIPTION ::
-        ...
-
-    ANSWER ::
-        ...
+   ANSWER ::
+        Battery = 41424
+		Infield = 58934
+		Outfield = 29560
 
 */
 
-SELECT MAX(yearid), MIN(yearid)
-FROM fieldingpost;
+
+SELECT SUM(po) AS sum_of_putouts, position_group
+FROM	(SELECT po, 
+		        CASE WHEN pos IN ('OF') THEN 'Outfield'
+		             WHEN pos IN ('SS', '1B', '2B', '3B') THEN 'Infield'
+			         WHEN pos IN ('C', 'P') THEN 'Battery'
+			         ELSE 'Other' END AS position_group
+		 FROM fielding
+		 WHERE yearid = '2016') AS subquery
+GROUP BY position_group;
